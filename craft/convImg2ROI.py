@@ -66,7 +66,7 @@ def getRoiBoxes(image_path) :
     
     image = imgproc.loadImage(image_path) # 이미지를 rgb로 읽어서 np array로 반환함
     text_threshold = 0.3
-    link_threshold = 0.9
+    link_threshold = 1
     low_text       = 0.3
     resize_image, boxes = logis_roi_net(net, image, text_threshold=text_threshold, link_threshold=link_threshold, low_text=low_text)
     
@@ -87,3 +87,4 @@ def getRoiBoxes(image_path) :
     return resize_image, roi_boxes
     '''
     return resize_image, boxes, padded_image
+    '''

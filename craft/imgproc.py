@@ -35,15 +35,20 @@ def resize_aspect_ratio(img, target_width, image_down_ratio=4):
     # img = resize_margin_off(img)
     image_height, image_width, channel = img.shape
     
+    # 설정한 target_width로 width resizing
     resize_width  = round(target_width)
+    # 원본에서 resizing한 비율 설정
     resize_ratio  = resize_width / image_width
+    # 설정한 ratio로 height resizing
     resize_height = round(resize_ratio * image_height)
+    # resizing된 size로 openCV를 써서 resize_image 생성
     resize_image = cv2.resize(img, (resize_width, resize_height), interpolation=cv2.INTER_LINEAR)
 
     resize_ratio  = 1/image_down_ratio
     resize_width  = round(resize_width  * resize_ratio) 
     resize_height = round(resize_height * resize_ratio)
 
+    # 여기서부터는 padding에 관한 내용
     # make canvas and paste image
     # vgg에 대입하기 위해서는 이미지 size가 32의 배수 이여야 함
     # 따라서 32로 나눠서 나머지가 발생한다면 32에 맞춰서 0을 채운 배열(빈캔버스)를 만들고

@@ -32,8 +32,12 @@ def copyStateDict(state_dict):
 
 def logis_roi_net(net, image, text_threshold=0.1, link_threshold=0.4, low_text=0.3):    
     
+    # 너비 설정
     target_width = 640
+    
+    # 얼마나 줄일건지?
     image_down_ratio = 2
+    
     # resize된 이미지를 matplot으로 찍어보기
     resize_image, padded_image, resize_ratio = imgproc.resize_aspect_ratio(image, target_width=target_width, image_down_ratio=image_down_ratio)
     #print("출력")
@@ -68,11 +72,16 @@ def getRoiBoxes(image_path) :
     net.eval()
     
     image = imgproc.loadImage(image_path) # 이미지를 rgb로 읽어서 np array로 반환함
+    # 얼마나 글자 같은지 1일수록 글자
     text_threshold = 0.3
+    # 박스 연결
     link_threshold = 0.9
+    # 
     low_text       = 0.3
     resize_image, boxes, padded_image = logis_roi_net(net, image, text_threshold=text_threshold, link_threshold=link_threshold, low_text=low_text)
     
+    #print(boxes[0][0])
+    #print(type(boxes[0][0]))
     # resize_image, boxes = logis_roi_net(net, image)
 
     # boxes를 dataframe으로 처리
