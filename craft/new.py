@@ -64,7 +64,7 @@ def logis_roi_net(net, image, text_threshold=0.1, link_threshold=0.4, low_text=0
 
     # Box의 좌표를 원본 이미지의 좌표로 환산.
     boxes = craft_utils.adjustResultCoordinates(boxes, ratio_w, ratio_h)
-    return resize_image, boxes, padded_image
+    return resize_image, boxes
 
 def getRoiBoxes(image_path) :
     net = CRAFT(pretrained=False)  # initialize
@@ -78,7 +78,7 @@ def getRoiBoxes(image_path) :
     link_threshold = 0.9
     # 
     low_text       = 0.3
-    resize_image, boxes, padded_image = logis_roi_net(net, image, text_threshold=text_threshold, link_threshold=link_threshold, low_text=low_text)
+    resize_image, boxes = logis_roi_net(net, image, text_threshold=text_threshold, link_threshold=link_threshold, low_text=low_text)
     
     #print(boxes[0][0])
     #print(type(boxes[0][0]))
@@ -96,6 +96,6 @@ def getRoiBoxes(image_path) :
         newRow['y2'] = box[2][1] > box[3][1] and box[2][1] or box[3][1]
         roi_boxes = roi_boxes.append(newRow, ignore_index=True)
     
-    return resize_image, roi_boxes, padded_image
+    return resize_image, roi_boxes
     
     #return resize_image, boxes, padded_image
