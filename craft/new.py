@@ -66,18 +66,30 @@ def logis_roi_net(net, image, text_threshold=0.1, link_threshold=0.4, low_text=0
     boxes = craft_utils.adjustResultCoordinates(boxes, ratio_w, ratio_h)
     return resize_image, boxes
 
-def getRoiBoxes(image_path) :
+def getRoiBoxes(image_path):
     net = CRAFT(pretrained=False)  # initialize
     net.load_state_dict(copyStateDict(torch.load('./weights/hurap_ocr_logis.pth', map_location='cpu')))
     net.eval()
     
     image = imgproc.loadImage(image_path) # 이미지를 rgb로 읽어서 np array로 반환함
-    # 얼마나 글자 같은지 1일수록 글자
-    text_threshold = 0.3
-    # 박스 연결
-    link_threshold = 0.9
-    # 
-    low_text       = 0.3
+    
+    # Certainity required for a something to be classified as a letter. 
+    # The higher this value the clearer characters need to look. I'd recommend 0.5-0.6
+    # 값이 높을수록 문자가 더 깔끔해야 함(흐릿하면 ㄴㄴ).
+    text_threshold = 0.6
+    
+    # Amount of distance allowed between two characters for them to be seen as a single word. 
+    # I recommend 0.1-0.5, however playing with this value for your own use case might be better
+    # 두 개의 문자를 거리에 따라 한 개의 문자로 볼 것인지?
+    link_threshold = 1
+    
+    # Amount of boundary space around the letter/word when the coordinates are returned. 
+    # The higher this value the less space. 
+    # Upping this value also affects the link threshold of seeing words as one, but it can cut off unecessary borders around leters. 
+    # Having this value too high can affect edges of letters, cutting them off and lowering accuracy in reading them. 
+    # I'd recommend 0.3-0.4
+    # 값이 클수록 여백이 없음 -> recognition 하기가 어려워짐
+    low_text = 0.4
     resize_image, boxes = logis_roi_net(net, image, text_threshold=text_threshold, link_threshold=link_threshold, low_text=low_text)
     
     #print(boxes[0][0])
